@@ -5,7 +5,6 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 
 const multer = require('multer');
-const fetch = require('node-fetch');
 const FormData = require('form-data');
 
 
@@ -40,11 +39,12 @@ const upload = multer({ storage: storage });
 // Define route for image upload
 app.post('/upload', upload.single('image'), async (req, res) => {
   const formData = new FormData();
+  const fetch = await import('node-fetch');
   formData.append('image', req.file.buffer.toString('base64'));
 
-  const response = await fetch('https://api.imgbb.com/1/upload?key=368cbdb895c5bed277d50d216adbfa52', {
-      method: 'POST',
-      body: formData,
+  const response = await fetch.default('https://api.imgbb.com/1/upload?key=368cbdb895c5bed277d50d216adbfa52', {
+    method: 'POST',
+    body: formData,
   });
 
   const data = await response.json();
@@ -63,7 +63,6 @@ app.get('/images', async (req, res) => {
   const images = await Image.find();
   res.send(images);
 });
-
 
 
 
