@@ -50,7 +50,6 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   const newImage = new Image({ url: imageUrl });
   await newImage.save();
 
-  res.redirect('/');
 });
 
 // Define route for fetching images
