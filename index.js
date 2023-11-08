@@ -4,6 +4,11 @@ const app = express();
 const cors = require("cors");
 const mongoose = require('mongoose');
 
+const multer = require('multer');
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+
+
 app.use(express.json());
 app.use(cors());
 
