@@ -49,7 +49,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   // Save the image URL to the database
   const newImage = new Image({ url: imageUrl });
   await newImage.save();
-
+  res.status(200).send('Image uploaded successfully');
 });
 
 // Define route for fetching images
