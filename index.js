@@ -35,7 +35,7 @@ const Image = mongoose.model('Image', imageSchema);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Define route for image upload
+
 app.post('/upload', upload.single('image'), async (req, res) => {
   const formData = new FormData();
   const { default: fetch } = await import('node-fetch');
@@ -48,13 +48,11 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
   const data = await response.json();
 
-  
   const imageUrl = data.data.url;
-  const titles = req.body.title; // Extract the title from the request body
-  const texts = req.body.text; // Extract the text from the request body
+  const { title, text } = req.body; // Destructure title and text from req.body
 
   // Save the image URL, title, and text to the database
-  const newImage = new Image({ url: imageUrl, title: titles, text: texts });
+  const newImage = new Image({ url: imageUrl, title: title, text: text });
   await newImage.save();
   res.status(200).send('Blog uploaded successfully');
 });
