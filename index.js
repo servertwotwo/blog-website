@@ -35,7 +35,6 @@ const Image = mongoose.model('Image', imageSchema);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-
 app.post('/upload', upload.single('image'), async (req, res) => {
   const formData = new FormData();
   const { default: fetch } = await import('node-fetch');
