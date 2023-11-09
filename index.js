@@ -57,6 +57,21 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 });
 
 
+app.get('/blog/:objectId', async (req, res) => {
+  const { objectId } = req.params;
+
+  try {
+    const user = await Image.findById(objectId);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: 'Blog not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 // Define route for fetching images
 app.get('/images', async (req, res) => {
