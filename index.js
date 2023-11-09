@@ -22,18 +22,13 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-
+// Update the imageSchema to include title and text fields
 const imageSchema = new mongoose.Schema({
   url: String,
   title: String,
   text: String
 });
-
 const Image = mongoose.model('Image', imageSchema);
-
-// Configure multer for file upload
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 // Define route for image upload
 app.post('/upload', upload.single('image'), async (req, res) => {
@@ -48,7 +43,6 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
   const data = await response.json();
 
-  
   const imageUrl = data.data.url;
   const title = req.body.title; // Extract the title from the request body
   const text = req.body.text; // Extract the text from the request body
@@ -56,10 +50,8 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   // Save the image URL, title, and text to the database
   const newImage = new Image({ url: imageUrl, title: title, text: text });
   await newImage.save();
-  res.status(200).send('Blog uploaded successfully');
+  res.status(200).send('Image uploaded successfully');
 });
-
-
 
 // Define route for fetching images
 app.get('/images', async (req, res) => {
