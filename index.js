@@ -22,23 +22,34 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-// Update the imageSchema to include title and text fields
+
 const imageSchema = new mongoose.Schema({
   url: String,
   title: String,
   text: String
 });
+
 const Image = mongoose.model('Image', imageSchema);
+
+// Configure multer for file upload
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+//...
 
 // Define route for image upload
 app.post('/upload', upload.single('image'), async (req, res) => {
-  const formData = new FormData();
   const { default: fetch } = await import('node-fetch');
-  formData.append('image', req.file.buffer.toString('base64'));
+  const base64Image = req.file.buffer.toString('base64');
 
   const response = await fetch('https://api.imgbb.com/1/upload?key=368cbdb895c5bed277d50d216adbfa52', {
     method: 'POST',
-    body: formData,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      image: base64Image
+    })
   });
 
   const data = await response.json();
@@ -50,8 +61,12 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   // Save the image URL, title, and text to the database
   const newImage = new Image({ url: imageUrl, title: title, text: text });
   await newImage.save();
-  res.status(200).send('Image uploaded successfully');
+  res.status(200).send('Blog uploaded successfully');
 });
+
+//...
+
+
 
 // Define route for fetching images
 app.get('/images', async (req, res) => {
