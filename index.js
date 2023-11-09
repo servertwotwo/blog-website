@@ -50,11 +50,11 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
   
   const imageUrl = data.data.url;
-  const title = req.body.title; // Extract the title from the request body
-  const text = req.body.text; // Extract the text from the request body
+  const titles = req.body.title; // Extract the title from the request body
+  const texts = req.body.text; // Extract the text from the request body
 
   // Save the image URL, title, and text to the database
-  const newImage = new Image({ url: imageUrl, title: title, text: text });
+  const newImage = new Image({ url: imageUrl, title: titles, text: texts });
   await newImage.save();
   res.status(200).send('Blog uploaded successfully');
 });
