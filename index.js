@@ -35,25 +35,20 @@ const Image = mongoose.model('Image', imageSchema);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-//...
-
 // Define route for image upload
 app.post('/upload', upload.single('image'), async (req, res) => {
+  const formData = new FormData();
   const { default: fetch } = await import('node-fetch');
-  const base64Image = req.file.buffer.toString('base64');
+  formData.append('image', req.file.buffer.toString('base64'));
 
   const response = await fetch('https://api.imgbb.com/1/upload?key=368cbdb895c5bed277d50d216adbfa52', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      image: base64Image
-    })
+    body: formData,
   });
 
   const data = await response.json();
 
+  
   const imageUrl = data.data.url;
   const title = req.body.title; // Extract the title from the request body
   const text = req.body.text; // Extract the text from the request body
@@ -63,8 +58,6 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   await newImage.save();
   res.status(200).send('Blog uploaded successfully');
 });
-
-//...
 
 
 
