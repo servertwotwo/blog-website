@@ -73,6 +73,20 @@ app.get('/blog/:objectId', async (req, res) => {
 });
 
 
+app.delete('/blogtodelete/:id', async (req, res) => {
+  const { id } = req.params;
+  console.log('Received DELETE request for blog ID:', id);
+  try {
+    const blog = await Image.findByIdAndDelete(id);
+    
+    res.status(200).json({ message: 'Data deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
 // Define route for fetching images
 app.get('/images', async (req, res) => {
   const images = await Image.find();
