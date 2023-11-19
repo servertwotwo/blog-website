@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require("cors");
 const mongoose = require('mongoose');
-
+const apiKey = process.env.API_KEY;
 const multer = require('multer');
 const FormData = require('form-data');
 
@@ -11,6 +11,18 @@ app.use(express.json());
 app.use(cors());
 
 const PORT = 3000;
+
+
+app.get('/api/data', (req, res) => {
+  try {
+    // Include apiKey in the response
+    res.json({ success: true, apiKey: apiKey });
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
